@@ -1,4 +1,12 @@
-public class wallet extends Applet {
+package helloworld;
+
+import javacard.framework.APDU;
+import javacard.framework.Applet;
+import javacard.framework.ISO7816;
+import javacard.framework.ISOException;
+import javacard.framework.OwnerPIN;
+
+public class HELLOWORLD extends Applet {
 	final static byte wallet_ClA=(byte)0x80;
 	final static byte VERIFY=(byte)0x20;
 	final static byte CREDIT=(byte)0x30;
@@ -15,7 +23,7 @@ public class wallet extends Applet {
 	final static short SW_NEGATIVE_BALANCE=0x6A85;
 	OwnerPIN pin;
 	short balance;
-	private wallet(byte[] bArray, short bOffset, byte bLength) {
+	private HELLOWORLD(byte[] bArray, short bOffset, byte bLength) {
 		pin =new OwnerPIN(PIN_TRY_LIMIT,MAX_PIN_SIZE);
 		byte iLen=bArray[bOffset];
 		bOffset=(short)(bOffset+iLen+1);
@@ -28,7 +36,7 @@ public class wallet extends Applet {
 
 
 	public static void install(byte[] bArray, short bOffset, byte bLength) {
-		new wallet(bArray,bOffset, bLength);
+		new HELLOWORLD(bArray,bOffset, bLength);
 	}
 
 	public boolean select(){
@@ -49,18 +57,18 @@ public class wallet extends Applet {
 		if(buffer[ISO7816.OFFSET_CLA]!= wallet_ClA)
 			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 		switch(buffer[ISO7816.OFFSET_INS]){
-		case GET_BALANCE:
+		case GET_BALANCE:///send 805000000002
 			getBalance(apdu);
 			return;
 
-		case DEBIT:
+		case DEBIT:///send 8040000001037f
 			debit(apdu);
 			return;
 
-		case CREDIT:
+		case CREDIT:///send 8030000001057f
 			credit(apdu);
 				return;
-		case VERIFY:
+		case VERIFY://send 80200000040102030400
 			verify(apdu);
 			return;
 		default:
